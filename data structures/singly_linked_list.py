@@ -68,3 +68,5 @@ class linked_list:
         while(current != None):
             print(current.data)
             current = current.next
+
+ 
