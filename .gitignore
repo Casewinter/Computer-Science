@@ -1,0 +1,13 @@
+# Ignorar arquivos e pastas de output do C
+*.o
+*.out
+*.exe
+*.a
+*.so
+*.dll
+
+# Ignorar a pasta de build, se você usa uma
+/output/
+
+# Ignorar a pasta .vscode
+.vscode/
