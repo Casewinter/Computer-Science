@@ -37,7 +37,7 @@ def search_book(path):
         isbns = site.find_all("div", class_="bVj5Zb")
         medias = site.find_all("div", class_="TCYkdd")
         #se algo falhar, retornamos uma string vazia
-        if(title.text == None):
+        if not(hasattr(title, "text")):
             title_books.append("")
             isbn_books.append("")
             media_books.append("")
@@ -50,26 +50,49 @@ def search_book(path):
 
         isbns = isbns[::-1]
         unified_data = {}
+        title_books.append(title.text)
 
         for i in range(len(medias)):
             unified_data[medias[i].text] = isbns[i].text
 
         match media[index]:
             case "ebook":
-                isbn_books.append(unified_data["Livro digital"])
-                media_books.append("Livro digital")
+                if "Livro digital" in unified_data:
+                    isbn_books.append(unified_data["Livro digital"])
+                    media_books.append("Livro digital")
+                    continue
+
+                first_key = list(unified_data)[0]
+                isbn_books.append(unified_data[first_key])
+                media_books.append("")
+                
             case "fisical":
-                isbn_books.append(unified_data["Livro capa dura"])
-                media_books.append("Livro capa dura")
-            case "audio":
-                isbn_books.append(unified_data["Audiolivro"])
-                media_books.append("Audiolivro")
-            case _:
+                if "Livro de capa dura" in unified_data:
+                    isbn_books.append(unified_data["Livro de capa dura"])
+                    media_books.append("Livro capa dura")
+                    continue
+                if "Livro de bolso" in unified_data:
+                    isbn_books.append(unified_data["Livro de bolso"])
+                    media_books.append("Livro capa dura")
+                    continue
                 first_key = list(unified_data)[0]
                 isbn_books.append(unified_data[first_key])
                 media_books.append("")
 
-        title_books.append(title.text)
+            case "audio":
+                if "Audiolivro" in unified_data:
+                    isbn_books.append(unified_data["Audiolivro"])
+                    media_books.append("Audiolivro")
+                    continue
+
+                first_key = list(unified_data)[0]
+                isbn_books.append(unified_data[first_key])
+                media_books.append("")
+
+            case _:
+                first_key = list(unified_data)[0]
+                isbn_books.append(unified_data[first_key])
+                media_books.append("")
 
     df["Titulo do Livro"] = title_books
     df["ISBN"] = isbn_books
