@@ -65,7 +65,8 @@ def search_book(path):
                 isbn_books.append(unified_data["Audiolivro"])
                 media_books.append("Audiolivro")
             case _:
-                isbn_books.append(unified_data[0])
+                first_key = list(unified_data)[0]
+                isbn_books.append(unified_data[first_key])
                 media_books.append("")
 
         title_books.append(title.text)
